@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Calculator with GPT</title>
+    <title>webp_calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -111,7 +111,7 @@
             background-color: #333;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> <!--수식을 로딩해주는 라이브러리-->
     <script src="config.js"></script> <!-- API 키 파일 불러오기 -->
 </head>
 <body>
@@ -150,23 +150,26 @@
     }
 
     function clearDisplay() {
+        // C 버튼
         document.getElementById("display").value = "";
     }
 
     function deleteLast() {
+        // 백스페이스 버튼
         let currentValue = document.getElementById("display").value;
         document.getElementById("display").value = currentValue.slice(0, -1);
     }
 
     function calculateResult() {
         try {
+            // eval 함수로 수식 계산
             let result = eval(document.getElementById("display").value);
             document.getElementById("display").value = result;
         } catch (e) {
             document.getElementById("display").value = "Error";
         }
     }
-
+    //GPT 실행 코드
     async function chat() {
         const message = document.getElementById("prompt").value;
 
@@ -179,10 +182,12 @@
             body: JSON.stringify({
                 model: "gpt-4o-mini",
                 messages: [
+                    //가이드 프롬프트
                     {
                         role: "system",
                         content: "You are a Korean teacher. Teach a student with Korean. You teach him/her math. Max line is 20 lines. And please put some newline at the end of the line."
                     },
+                    //사용자 입력 프롬프트
                     {
                         role: "user",
                         content: message,
@@ -194,8 +199,9 @@
         const data = await response.json();
         document.getElementById("chat").innerHTML = data.choices[0].message.content;
 
-        // 수식 렌더링
         MathJax.typesetPromise();
+        //GPT api가 로컬 HTML에서는 작동하지 않아서 python이나 node.js 서버를 열어야지 작동합니다.
+        //그리고 레포가 퍼블릭인 만큼, API 키를 ignore로 배제하여, 실행을 위해선 config.js에 키를 입력해야 합니다.
     }
 </script>
 </body>
